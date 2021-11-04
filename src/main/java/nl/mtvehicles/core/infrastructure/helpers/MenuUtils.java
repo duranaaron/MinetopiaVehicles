@@ -165,14 +165,11 @@ public class MenuUtils {
         Inventory inv = Bukkit.createInventory(null, 54, "Vehicle Restore " + id);
         Main.configList.forEach(ConfigUtils::reload);
         if (Main.vehicleDataConfig.getConfig().getConfigurationSection("vehicle") != null) {
-            List<String> dataVehicle = new ArrayList<>();
-            for (String entry : Main.vehicleDataConfig.getConfig().getConfigurationSection("vehicle").getKeys(false)) {
-                dataVehicle.add(entry);
-            }
+            List<String> dataVehicle = new ArrayList<>(Main.vehicleDataConfig.getConfig().getConfigurationSection("vehicle").getKeys(false));
             for (int i = 1 + id * 36 - 36; i <= id * 36; i++) {
                 if (i - 1 < dataVehicle.size()) {
                     if (of == null || Main.vehicleDataConfig.getConfig().getString("vehicle." + dataVehicle.get(i - 1) + ".owner").contains(of.toString())) {
-                        if (Main.vehicleDataConfig.getConfig().getBoolean("vehicle." + dataVehicle.get(i - 1) + ".isGlow") == true) {
+                        if (Main.vehicleDataConfig.getConfig().getBoolean("vehicle." + dataVehicle.get(i - 1) + ".isGlow")) {
                             inv.addItem(ItemUtils.carItem2glow(Main.vehicleDataConfig.getConfig().getInt("vehicle." + dataVehicle.get(i - 1) + ".skinDamage"), Main.vehicleDataConfig.getConfig().getString("vehicle." + dataVehicle.get(i - 1) + ".name"), Main.vehicleDataConfig.getConfig().getString("vehicle." + dataVehicle.get(i - 1) + ".skinItem"), dataVehicle.get(i - 1)));
                         } else {
                             inv.addItem(ItemUtils.carItem2(Main.vehicleDataConfig.getConfig().getInt("vehicle." + dataVehicle.get(i - 1) + ".skinDamage"), Main.vehicleDataConfig.getConfig().getString("vehicle." + dataVehicle.get(i - 1) + ".name"), Main.vehicleDataConfig.getConfig().getString("vehicle." + dataVehicle.get(i - 1) + ".skinItem"), dataVehicle.get(i - 1)));

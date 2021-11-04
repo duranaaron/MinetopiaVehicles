@@ -36,11 +36,11 @@ public class VehicleClickEvent implements Listener {
 
         if (lastUsage.containsKey(p.getName())) {
 
-            lastUsed = ((Long) lastUsage.get(p.getName())).longValue();
+            lastUsed = lastUsage.get(p.getName());
         }
 
         if (System.currentTimeMillis() - lastUsed >= 500) {
-            lastUsage.put(p.getName(), Long.valueOf(System.currentTimeMillis()));
+            lastUsage.put(p.getName(), System.currentTimeMillis());
         } else {
             return;
         }

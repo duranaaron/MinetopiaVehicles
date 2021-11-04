@@ -21,7 +21,7 @@ public class ChatEvent implements Listener {
             return;
         }
         if (ItemUtils.edit.get(p.getUniqueId() + ".kenteken")) {
-            if (!e.getMessage().toLowerCase().contains("annule")) {
+            if (!e.getMessage().equalsIgnoreCase("annuleren") || !e.getMessage().equalsIgnoreCase("cancel")) {
                 e.setCancelled(true);
                 String ken = NBTUtils.getString(p.getInventory().getItemInMainHand(), "mtvehicles.kenteken");
                 if (!(Main.vehicleDataConfig.getConfig().get("vehicle." + e.getMessage() + ".skinItem") == null)) {
@@ -60,7 +60,7 @@ public class ChatEvent implements Listener {
             return;
         }
         if (ItemUtils.edit.get(p.getUniqueId() + ".naam")) {
-            if (!e.getMessage().toLowerCase().contains("annule")) {
+            if (!e.getMessage().equalsIgnoreCase("annuleren") || !e.getMessage().equalsIgnoreCase("cancel")) {
                 e.setCancelled(true);
                 String ken = NBTUtils.getString(p.getInventory().getItemInMainHand(), "mtvehicles.kenteken");
                 Main.vehicleDataConfig.getConfig().set("vehicle." + ken + ".name", e.getMessage());
@@ -103,7 +103,7 @@ public class ChatEvent implements Listener {
                 p.sendMessage(TextUtils.colorize("&cLetop! Het cijfer moet onder de 100 zijn!"));
                 return;
             }
-            if (!e.getMessage().toLowerCase().contains("annule")) {
+            if (!e.getMessage().equalsIgnoreCase("annuleren") || !e.getMessage().equalsIgnoreCase("cancel")) {
                 e.setCancelled(true);
                 String ken = NBTUtils.getString(p.getInventory().getItemInMainHand(), "mtvehicles.kenteken");
                 Main.vehicleDataConfig.getConfig().set("vehicle." + ken + ".benzine", Double.valueOf(e.getMessage()));
@@ -138,7 +138,7 @@ public class ChatEvent implements Listener {
                 ItemUtils.edit.put(p.getUniqueId() + ".benzineverbruik", false);
                 return;
             }
-            if (!e.getMessage().toLowerCase().contains("annule")) {
+            if (!e.getMessage().equalsIgnoreCase("annuleren") || !e.getMessage().equalsIgnoreCase("cancel")) {
                 e.setCancelled(true);
                 String ken = NBTUtils.getString(p.getInventory().getItemInMainHand(), "mtvehicles.kenteken");
                 Main.vehicleDataConfig.getConfig().set("vehicle." + ken + ".benzineVerbruik", Double.valueOf(e.getMessage()));
@@ -175,7 +175,7 @@ public class ChatEvent implements Listener {
                 ItemUtils.edit.put(p.getUniqueId() + ".kofferbakRows", false);
                 return;
             }
-            if (!e.getMessage().toLowerCase().contains("annule")) {
+            if (!e.getMessage().equalsIgnoreCase("annuleren") || !e.getMessage().equalsIgnoreCase("cancel")) {
                 e.setCancelled(true);
                 String ken = NBTUtils.getString(p.getInventory().getItemInMainHand(), "mtvehicles.kenteken");
                 Main.vehicleDataConfig.getConfig().set("vehicle." + ken + ".kofferbakRows", Integer.parseInt(e.getMessage()));
@@ -210,7 +210,7 @@ public class ChatEvent implements Listener {
                 ItemUtils.edit.put(p.getUniqueId() + ".acceleratieSpeed", false);
                 return;
             }
-            if (!e.getMessage().toLowerCase().contains("annule")) {
+            if (!e.getMessage().equalsIgnoreCase("annuleren") || !e.getMessage().equalsIgnoreCase("cancel")) {
                 e.setCancelled(true);
                 String ken = NBTUtils.getString(p.getInventory().getItemInMainHand(), "mtvehicles.kenteken");
                 Main.vehicleDataConfig.getConfig().set("vehicle." + ken + ".acceleratieSpeed", Double.valueOf(e.getMessage()));
@@ -245,7 +245,7 @@ public class ChatEvent implements Listener {
                 ItemUtils.edit.put(p.getUniqueId() + ".maxSpeed", false);
                 return;
             }
-            if (!e.getMessage().toLowerCase().contains("annule")) {
+            if (!e.getMessage().equalsIgnoreCase("annuleren") || !e.getMessage().equalsIgnoreCase("cancel")) {
                 e.setCancelled(true);
                 String ken = NBTUtils.getString(p.getInventory().getItemInMainHand(), "mtvehicles.kenteken");
                 Main.vehicleDataConfig.getConfig().set("vehicle." + ken + ".maxSpeed", Double.valueOf(e.getMessage()));
@@ -280,7 +280,7 @@ public class ChatEvent implements Listener {
                 ItemUtils.edit.put(p.getUniqueId() + ".brakingSpeed", false);
                 return;
             }
-            if (!e.getMessage().toLowerCase().contains("annule")) {
+            if (!e.getMessage().equalsIgnoreCase("annuleren") || !e.getMessage().equalsIgnoreCase("cancel")) {
                 e.setCancelled(true);
                 String ken = NBTUtils.getString(p.getInventory().getItemInMainHand(), "mtvehicles.kenteken");
                 Main.vehicleDataConfig.getConfig().set("vehicle." + ken + ".brakingSpeed", Double.valueOf(e.getMessage()));
@@ -317,7 +317,7 @@ public class ChatEvent implements Listener {
                 ItemUtils.edit.put(p.getUniqueId() + ".aftrekkenSpeed", false);
                 return;
             }
-            if (!e.getMessage().toLowerCase().contains("annule")) {
+            if (!e.getMessage().equalsIgnoreCase("annuleren") || !e.getMessage().equalsIgnoreCase("cancel")) {
                 e.setCancelled(true);
                 String ken = NBTUtils.getString(p.getInventory().getItemInMainHand(), "mtvehicles.kenteken");
                 Main.vehicleDataConfig.getConfig().set("vehicle." + ken + ".aftrekkenSpeed", Double.valueOf(e.getMessage()));
@@ -354,7 +354,7 @@ public class ChatEvent implements Listener {
                 ItemUtils.edit.put(p.getUniqueId() + ".maxSpeedBackwards", false);
                 return;
             }
-            if (!e.getMessage().toLowerCase().contains("annule")) {
+            if (!e.getMessage().equalsIgnoreCase("annuleren") || !e.getMessage().equalsIgnoreCase("cancel")) {
                 e.setCancelled(true);
                 String ken = NBTUtils.getString(p.getInventory().getItemInMainHand(), "mtvehicles.kenteken");
                 Main.vehicleDataConfig.getConfig().set("vehicle." + ken + ".maxSpeedBackwards", Double.valueOf(e.getMessage()));
@@ -389,7 +389,7 @@ public class ChatEvent implements Listener {
                 ItemUtils.edit.put(p.getUniqueId() + ".rotateSpeed", false);
                 return;
             }
-            if (!e.getMessage().toLowerCase().contains("annule")) {
+            if (!e.getMessage().equalsIgnoreCase("annuleren") || !e.getMessage().equalsIgnoreCase("cancel")) {
                 e.setCancelled(true);
                 String ken = NBTUtils.getString(p.getInventory().getItemInMainHand(), "mtvehicles.kenteken");
                 Main.vehicleDataConfig.getConfig().set("vehicle." + ken + ".rotateSpeed", Integer.parseInt(e.getMessage()));

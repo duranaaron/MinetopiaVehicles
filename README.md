@@ -60,4 +60,4 @@ Discord: https://discord.gg/4nAcycckn6
   mtvehicles.ride
   mtvehicles.update
 ```
-_Mis je een permissions of werkt hij niet meld het dan in onze **Discord**._
+_Mis je een permission of werkt hij niet meld het dan in onze **Discord**._

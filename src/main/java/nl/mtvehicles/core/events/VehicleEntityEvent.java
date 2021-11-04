@@ -79,14 +79,14 @@ public class VehicleEntityEvent implements Listener {
     }
 
     public static void kofferbak(Player p, String ken) {
-        if (Main.defaultConfig.getConfig().getBoolean("kofferbakEnabled") == true) {
+        if (Main.defaultConfig.getConfig().getBoolean("kofferbakEnabled")) {
             if (Vehicle.getByPlate(ken) == null) {
                 Main.messagesConfig.sendMessage(p, "vehicleNotFound");
                 return;
             }
             if (Vehicle.getByPlate(ken).getOwner().equals(p.getUniqueId().toString()) || p.hasPermission("mtvehicles.kofferbak")) {
                 Main.configList.forEach(ConfigUtils::reload);
-                if (Main.vehicleDataConfig.getConfig().getBoolean("vehicle." + ken + ".kofferbak") == true) {
+                if (Main.vehicleDataConfig.getConfig().getBoolean("vehicle." + ken + ".kofferbak")) {
                     if (Main.vehicleDataConfig.getConfig().getList("vehicle." + ken + ".kofferbakData") == null) {
                         return;
                     }

@@ -28,7 +28,7 @@ public class JoinEvent implements Listener {
         Player p = e.getPlayer();
         MovementManager.MovementSelector(p);
 
-        if (Main.defaultConfig.getConfig().getString("messagesLanguage").contains("ns")) {
+        if (Main.defaultConfig.getConfig().getString("messagesLanguage").equals("ns")) {
             if (p.hasPermission("mtvehicles.language")) {
                 p.sendMessage(TextUtils.colorize("&cHey! You have not yet changed the language of the plugin. Do this by with &4/vehicle language&c!"));
             }
@@ -56,7 +56,7 @@ public class JoinEvent implements Listener {
             sb.append((char) cp);
         }
         PrintWriter writer = new PrintWriter("plugins/MTVehicles/messages.yml");
-        writer.print(sb.toString());
+        writer.print(sb);
         writer.close();
         Main.configList.forEach(ConfigUtils::reload);
     }
@@ -70,7 +70,7 @@ public class JoinEvent implements Listener {
             readAll(r);
         } catch (IOException ex) {
             ex.printStackTrace();
-            Bukkit.getLogger().info("We hebben geen verbinding kunnen maken met de servers van MinetopiaVehicles.");
+            Bukkit.getLogger().info("We couldn't make a connection to the servers of MinetopiaVehicles.");
         }
     }
 
@@ -83,7 +83,7 @@ public class JoinEvent implements Listener {
             readAll(r);
         } catch (IOException ex) {
             ex.printStackTrace();
-            Bukkit.getLogger().info("We hebben geen verbinding kunnen maken met de servers van MinetopiaVehicles.");
+            Bukkit.getLogger().info("We couldn't make a connection to the servers of MinetopiaVehicles.");
         }
     }
 
@@ -106,7 +106,7 @@ public class JoinEvent implements Listener {
             }
         } catch (IOException ex) {
             ex.printStackTrace();
-            Bukkit.getLogger().info("We hebben geen verbinding kunnen maken met de servers van MinetopiaVehicles.");
+            Bukkit.getLogger().info("We couldn't make a connection to the servers of MinetopiaVehicles.");
         }
     }
 
@@ -128,7 +128,7 @@ public class JoinEvent implements Listener {
             }
         } catch (IOException ex) {
             ex.printStackTrace();
-            Bukkit.getLogger().info("We hebben geen verbinding kunnen maken met de servers van MinetopiaVehicles.");
+            Bukkit.getLogger().info("We couldn't make a connection to the servers of MinetopiaVehicles.");
         }
     }
 }

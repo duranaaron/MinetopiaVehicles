@@ -8,12 +8,12 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 
 public class BossBarUtils {
-    public static BossBar Benzine;
+    public static BossBar fuelBossBar;
 
     public static void setBossBarValue(double counter, String ken) {
         if (Main.defaultConfig.getConfig().getBoolean("benzine") && Main.vehicleDataConfig.getConfig().getBoolean("vehicle." + ken + ".benzineEnabled")) {
-            Benzine.setProgress(counter);
-            Benzine.setTitle(Math.round(counter * 100.0D) + "% " + TextUtils.colorize(Main.messagesConfig.getMessage("bossbarFuel")));
+            fuelBossBar.setProgress(counter);
+            fuelBossBar.setTitle(Math.round(counter * 100.0D) + "% " + TextUtils.colorize(Main.messagesConfig.getMessage("bossbarFuel")));
 
             Double fuel = VehicleData.fuel.get(ken);
 
@@ -21,22 +21,22 @@ public class BossBarUtils {
             Main.vehicleDataConfig.save();
 
             if (fuel < 30) {
-                Benzine.setColor(BarColor.RED);
+                fuelBossBar.setColor(BarColor.RED);
                 return;
             }
             if (fuel < 60) {
-                Benzine.setColor(BarColor.YELLOW);
+                fuelBossBar.setColor(BarColor.YELLOW);
                 return;
             }
             if (fuel < 100) {
-                Benzine.setColor(BarColor.GREEN);
+                fuelBossBar.setColor(BarColor.GREEN);
             }
         }
     }
 
     public static void removeBossBar(Player player, String ken) {
         if (Main.defaultConfig.getConfig().getBoolean("benzine") && Main.vehicleDataConfig.getConfig().getBoolean("vehicle." + ken + ".benzineEnabled")) {
-            Benzine.removePlayer(player);
+            fuelBossBar.removePlayer(player);
         }
     }
 
@@ -44,17 +44,17 @@ public class BossBarUtils {
         if (Main.defaultConfig.getConfig().getBoolean("benzine") && Main.vehicleDataConfig.getConfig().getBoolean("vehicle." + ken + ".benzineEnabled")) {
             double fuel = Main.vehicleDataConfig.getConfig().getDouble(String.format("vehicle.%s.benzine", player.getVehicle().getCustomName().replace("MTVEHICLES_MAINSEAT_", "")));
             String fuelString = String.valueOf(fuel);
-            Benzine = Bukkit.createBossBar(Math.round(Double.parseDouble(fuelString)) + "% " + TextUtils.colorize(Main.messagesConfig.getMessage("bossbarFuel")), BarColor.GREEN, BarStyle.SOLID);
+            fuelBossBar = Bukkit.createBossBar(Math.round(Double.parseDouble(fuelString)) + "% " + TextUtils.colorize(Main.messagesConfig.getMessage("bossbarFuel")), BarColor.GREEN, BarStyle.SOLID);
             if (fuel < 30) {
-                Benzine.setColor(BarColor.RED);
+                fuelBossBar.setColor(BarColor.RED);
             }
             if (fuel < 60) {
-                Benzine.setColor(BarColor.YELLOW);
+                fuelBossBar.setColor(BarColor.YELLOW);
             }
             if (fuel < 100) {
-                Benzine.setColor(BarColor.GREEN);
+                fuelBossBar.setColor(BarColor.GREEN);
             }
-            Benzine.addPlayer(player);
+            fuelBossBar.addPlayer(player);
         }
     }
 }

@@ -4,13 +4,16 @@ import nl.mtvehicles.core.commands.vehiclesubs.VehicleEdit;
 import nl.mtvehicles.core.commands.vehiclesubs.VehicleMenu;
 import nl.mtvehicles.core.events.JoinEvent;
 import nl.mtvehicles.core.events.VehicleEntityEvent;
+import nl.mtvehicles.core.infrastructure.dataconfig.MessagesConfig;
 import nl.mtvehicles.core.infrastructure.helpers.ItemUtils;
 import nl.mtvehicles.core.infrastructure.helpers.MenuUtils;
 import nl.mtvehicles.core.infrastructure.helpers.NBTUtils;
 import nl.mtvehicles.core.infrastructure.helpers.TextUtils;
 import nl.mtvehicles.core.infrastructure.models.Vehicle;
 import nl.mtvehicles.core.Main;
+import nl.mtvehicles.core.infrastructure.modules.ConfigModule;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,6 +22,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import sun.security.krb5.Config;
 
 import java.util.HashMap;
 import java.util.List;
@@ -84,20 +88,48 @@ public class InventoryClickEvent implements Listener {
         }
         if (e.getView().getTitle().contains("Choose your language")) {
             e.setCancelled(true);
-            if (e.getRawSlot() == 11) {
+            if (e.getRawSlot() == 10) { //English
                 JoinEvent.languageCheck.put(p.getUniqueId(), false);
-                p.sendMessage(TextUtils.colorize("&aYour language has changed!"));
-                JoinEvent.changeLanguageEnglish();
-                Main.defaultConfig.getConfig().set("messagesLanguage", "en");
-                Main.defaultConfig.save();
+                if (ConfigModule.messagesConfig.setLanguageFile("en")){
+                    p.sendMessage(ConfigModule.messagesConfig.getMessage("languageHasChanged"));
+                    ConfigModule.defaultConfig.getConfig().set("messagesLanguage", "en");
+                    ConfigModule.defaultConfig.save();
+                } else {
+                    p.sendMessage(ChatColor.RED + "An error occurred whilst trying to set a new language.");
+                }
                 p.closeInventory();
             }
-            if (e.getRawSlot() == 15) {
+            if (e.getRawSlot() == 12) { //Dutch
                 JoinEvent.languageCheck.put(p.getUniqueId(), false);
-                p.sendMessage(TextUtils.colorize("&aJouw taal is veranderd!!"));
-                JoinEvent.changeLanguageDutch();
-                Main.defaultConfig.getConfig().set("messagesLanguage", "nl");
-                Main.defaultConfig.save();
+                if (ConfigModule.messagesConfig.setLanguageFile("nl")){
+                    p.sendMessage(ConfigModule.messagesConfig.getMessage("languageHasChanged"));
+                    ConfigModule.defaultConfig.getConfig().set("messagesLanguage", "nl");
+                    ConfigModule.defaultConfig.save();
+                } else {
+                    p.sendMessage(ChatColor.RED + "An error occurred whilst trying to set a new language.");
+                }
+                p.closeInventory();
+            }
+            if (e.getRawSlot() == 14) { //Spanish
+                JoinEvent.languageCheck.put(p.getUniqueId(), false);
+                if (ConfigModule.messagesConfig.setLanguageFile("es")){
+                    p.sendMessage(ConfigModule.messagesConfig.getMessage("languageHasChanged"));
+                    ConfigModule.defaultConfig.getConfig().set("messagesLanguage", "es");
+                    ConfigModule.defaultConfig.save();
+                } else {
+                    p.sendMessage(ChatColor.RED + "An error occurred whilst trying to set a new language.");
+                }
+                p.closeInventory();
+            }
+            if (e.getRawSlot() == 16) { //Czech
+                JoinEvent.languageCheck.put(p.getUniqueId(), false);
+                if (ConfigModule.messagesConfig.setLanguageFile("cs")){
+                    p.sendMessage(ConfigModule.messagesConfig.getMessage("languageHasChanged"));
+                    ConfigModule.defaultConfig.getConfig().set("messagesLanguage", "cs");
+                    ConfigModule.defaultConfig.save();
+                } else {
+                    p.sendMessage(ChatColor.RED + "An error occurred whilst trying to set a new language.");
+                }
                 p.closeInventory();
             }
         }
@@ -107,15 +139,15 @@ public class InventoryClickEvent implements Listener {
                 p.openInventory(skinMenu.get(p.getUniqueId()));
             }
             if (e.getRawSlot() == 15) { //accepting getting vehicle
-                List<Map<?, ?>> vehicles = Main.vehiclesConfig.getConfig().getMapList("voertuigen");
-                Main.messagesConfig.sendMessage(p, "completedvehiclegive");
+                List<Map<?, ?>> vehicles = ConfigModule.vehiclesConfig.getConfig().getMapList("voertuigen");
+                ConfigModule.messagesConfig.sendMessage(p, "completedvehiclegive");
                 p.getInventory().addItem(vehicleMenu.get(p.getUniqueId()));
                 String kenteken = NBTUtils.getString(vehicleMenu.get(p.getUniqueId()), "mtvehicles.kenteken");
                 String naam = NBTUtils.getString(vehicleMenu.get(p.getUniqueId()), "mtvehicles.naam");
                 Vehicle vehicle = new Vehicle();
-                List<String> members = Main.vehicleDataConfig.getConfig().getStringList("voertuig." + kenteken + ".members");
-                List<String> riders = Main.vehicleDataConfig.getConfig().getStringList("voertuig." + kenteken + ".riders");
-                List<String> kof = Main.vehicleDataConfig.getConfig().getStringList("voertuig." + kenteken + ".kofferbakData");
+                List<String> members = ConfigModule.vehicleDataConfig.getConfig().getStringList("voertuig." + kenteken + ".members");
+                List<String> riders = ConfigModule.vehicleDataConfig.getConfig().getStringList("voertuig." + kenteken + ".riders");
+                List<String> kof = ConfigModule.vehicleDataConfig.getConfig().getStringList("voertuig." + kenteken + ".kofferbakData");
                 vehicle.setLicensePlate(kenteken);
                 vehicle.setName(naam);
                 vehicle.setVehicleType((String) vehicles.get(intSave.get(p.getUniqueId())).get("vehicleType"));
@@ -166,7 +198,7 @@ public class InventoryClickEvent implements Listener {
         }
         if (e.getView().getTitle().contains("Vehicle Edit")) {
             e.setCancelled(true);
-            if (e.getCurrentItem().getItemMeta().getDisplayName().contains("Vehicle Settings")) {
+            if (e.getRawSlot() == 10) {
                 MenuUtils.menuEdit(p);
             }
             if (e.getCurrentItem().getItemMeta().getDisplayName().contains("Benzine Settings")) {
@@ -183,8 +215,8 @@ public class InventoryClickEvent implements Listener {
             }
             if (e.getCurrentItem().getItemMeta().getDisplayName().contains("Delete Vehicle")) {
                 String ken = NBTUtils.getString(p.getInventory().getItemInMainHand(), "mtvehicles.kenteken");
-                Main.vehicleDataConfig.getConfig().set("vehicle." + ken, null);
-                Main.vehicleDataConfig.save();
+                ConfigModule.vehicleDataConfig.getConfig().set("vehicle." + ken, null);
+                ConfigModule.vehicleDataConfig.save();
                 p.getInventory().getItemInMainHand().setAmount(0);
                 p.closeInventory();
             }
@@ -204,35 +236,35 @@ public class InventoryClickEvent implements Listener {
                 return;
             }
 
-            if (e.getCurrentItem().equals(ItemUtils.glowItem("BOOK", "&6Glow Aanpassen", "&7Huidige: &e" + Main.vehicleDataConfig.getConfig().getString("vehicle." + ken + ".isGlow")))) {
-                Main.vehicleDataConfig.getConfig().set("vehicle." + ken + ".isGlow", false);
+            if (e.getCurrentItem().equals(ItemUtils.glowItem("BOOK", "&6Glow Aanpassen", "&7Huidige: &e" + ConfigModule.vehicleDataConfig.getConfig().getString("vehicle." + ken + ".isGlow")))) {
+                ConfigModule.vehicleDataConfig.getConfig().set("vehicle." + ken + ".isGlow", false);
                 ItemMeta im = p.getInventory().getItemInMainHand().getItemMeta();
                 im.removeEnchant(Enchantment.ARROW_INFINITE);
                 im.removeItemFlags(ItemFlag.HIDE_ENCHANTS);
                 p.getInventory().getItemInMainHand().setItemMeta(im);
-                Main.vehicleDataConfig.save();
+                ConfigModule.vehicleDataConfig.save();
                 MenuUtils.menuEdit(p);
             }
 
-            if (e.getCurrentItem().equals(ItemUtils.mItem("BOOK", 1, (short) 0, "&6Glow Aanpassen", "&7Huidige: &e" + Main.vehicleDataConfig.getConfig().getString("vehicle." + ken + ".isGlow")))) {
-                Main.vehicleDataConfig.getConfig().set("vehicle." + ken + ".isGlow", true);
+            if (e.getCurrentItem().equals(ItemUtils.mItem("BOOK", 1, (short) 0, "&6Glow Aanpassen", "&7Huidige: &e" + ConfigModule.vehicleDataConfig.getConfig().getString("vehicle." + ken + ".isGlow")))) {
+                ConfigModule.vehicleDataConfig.getConfig().set("vehicle." + ken + ".isGlow", true);
                 ItemMeta im = p.getInventory().getItemInMainHand().getItemMeta();
                 im.addEnchant(Enchantment.ARROW_INFINITE, 1, true);
                 im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                 p.getInventory().getItemInMainHand().setItemMeta(im);
-                Main.vehicleDataConfig.save();
+                ConfigModule.vehicleDataConfig.save();
                 MenuUtils.menuEdit(p);
             }
 
             if (e.getCurrentItem().equals(ItemUtils.mItem("PAPER", 1, (short) 0, "&6Kenteken Aanpassen", "&7Huidige: &e" + ken))) {
                 p.closeInventory();
-                Main.messagesConfig.sendMessage(p, "typeLicenseInChat");
+                ConfigModule.messagesConfig.sendMessage(p, "typeLicenseInChat");
                 ItemUtils.edit.put(p.getUniqueId() + ".kenteken", true);
             }
 
-            if (e.getCurrentItem().getDurability() == (short) Main.vehicleDataConfig.getConfig().getInt("vehicle." + ken + ".skinDamage")) {
+            if (e.getCurrentItem().getDurability() == (short) ConfigModule.vehicleDataConfig.getConfig().getInt("vehicle." + ken + ".skinDamage")) {
                 p.closeInventory();
-                Main.messagesConfig.sendMessage(p, "typeNameInChat");
+                ConfigModule.messagesConfig.sendMessage(p, "typeNameInChat");
                 ItemUtils.edit.put(p.getUniqueId() + ".naam", true);
             }
         }
@@ -251,25 +283,25 @@ public class InventoryClickEvent implements Listener {
             }
             String menuitem = NBTUtils.getString(e.getCurrentItem(), "mtvehicles.item");
             if (menuitem.contains("1")) {
-                if (Main.vehicleDataConfig.getConfig().getBoolean("vehicle." + ken + ".benzineEnabled")) {
-                    Main.vehicleDataConfig.getConfig().set("vehicle." + ken + ".benzineEnabled", false);
-                    Main.vehicleDataConfig.save();
+                if (ConfigModule.vehicleDataConfig.getConfig().getBoolean("vehicle." + ken + ".benzineEnabled")) {
+                    ConfigModule.vehicleDataConfig.getConfig().set("vehicle." + ken + ".benzineEnabled", false);
+                    ConfigModule.vehicleDataConfig.save();
                 } else {
-                    Main.vehicleDataConfig.getConfig().set("vehicle." + ken + ".benzineEnabled", true);
-                    Main.vehicleDataConfig.save();
+                    ConfigModule.vehicleDataConfig.getConfig().set("vehicle." + ken + ".benzineEnabled", true);
+                    ConfigModule.vehicleDataConfig.save();
                 }
                 MenuUtils.benzineEdit(p);
-                Main.vehicleDataConfig.save();
+                ConfigModule.vehicleDataConfig.save();
                 MenuUtils.benzineEdit(p);
             }
             if (menuitem.contains("2")) {
                 p.closeInventory();
-                Main.messagesConfig.sendMessage(p, "typeNewBenzineInChat");
+                ConfigModule.messagesConfig.sendMessage(p, "typeNewBenzineInChat");
                 ItemUtils.edit.put(p.getUniqueId() + ".benzine", true);
             }
             if (menuitem.contains("3")) {
                 p.closeInventory();
-                Main.messagesConfig.sendMessage(p, "typeNewBenzineInChat");
+                ConfigModule.messagesConfig.sendMessage(p, "typeNewBenzineInChat");
                 ItemUtils.edit.put(p.getUniqueId() + ".benzineverbruik", true);
             }
         }
@@ -288,20 +320,20 @@ public class InventoryClickEvent implements Listener {
             String ken = NBTUtils.getString(p.getInventory().getItemInMainHand(), "mtvehicles.kenteken");
             String menuitem = NBTUtils.getString(e.getCurrentItem(), "mtvehicles.item");
             if (menuitem.contains("1")) {
-                if (Main.vehicleDataConfig.getConfig().getBoolean("vehicle." + ken + ".kofferbak")) {
-                    Main.vehicleDataConfig.getConfig().set("vehicle." + ken + ".kofferbak", false);
-                    Main.vehicleDataConfig.save();
+                if (ConfigModule.vehicleDataConfig.getConfig().getBoolean("vehicle." + ken + ".kofferbak")) {
+                    ConfigModule.vehicleDataConfig.getConfig().set("vehicle." + ken + ".kofferbak", false);
+                    ConfigModule.vehicleDataConfig.save();
                 } else {
-                    Main.vehicleDataConfig.getConfig().set("vehicle." + ken + ".kofferbak", true);
-                    Main.vehicleDataConfig.save();
+                    ConfigModule.vehicleDataConfig.getConfig().set("vehicle." + ken + ".kofferbak", true);
+                    ConfigModule.vehicleDataConfig.save();
                 }
                 MenuUtils.kofferbakEdit(p);
-                Main.vehicleDataConfig.save();
+                ConfigModule.vehicleDataConfig.save();
                 MenuUtils.kofferbakEdit(p);
             }
             if (menuitem.contains("2")) {
                 p.closeInventory();
-                Main.messagesConfig.sendMessage(p, "typeNewRowsInChat");
+                ConfigModule.messagesConfig.sendMessage(p, "typeNewRowsInChat");
                 ItemUtils.edit.put(p.getUniqueId() + ".kofferbakRows", true);
             }
             if (menuitem.contains("3")) {
@@ -337,50 +369,54 @@ public class InventoryClickEvent implements Listener {
             String menuitem = NBTUtils.getString(e.getCurrentItem(), "mtvehicles.item");
             if (menuitem.contains("1")) {
                 p.closeInventory();
-                Main.messagesConfig.sendMessage(p, "typeSpeedInChat");
+                ConfigModule.messagesConfig.sendMessage(p, "typeSpeedInChat");
                 ItemUtils.edit.put(p.getUniqueId() + ".acceleratieSpeed", true);
 
             }
             if (menuitem.contains("2")) {
                 p.closeInventory();
-                Main.messagesConfig.sendMessage(p, "typeSpeedInChat");
+                ConfigModule.messagesConfig.sendMessage(p, "typeSpeedInChat");
                 ItemUtils.edit.put(p.getUniqueId() + ".maxSpeed", true);
 
             }
             if (menuitem.contains("3")) {
                 p.closeInventory();
-                Main.messagesConfig.sendMessage(p, "typeSpeedInChat");
+                ConfigModule.messagesConfig.sendMessage(p, "typeSpeedInChat");
                 ItemUtils.edit.put(p.getUniqueId() + ".brakingSpeed", true);
             }
             if (menuitem.contains("4")) {
                 p.closeInventory();
-                Main.messagesConfig.sendMessage(p, "typeSpeedInChat");
+                ConfigModule.messagesConfig.sendMessage(p, "typeSpeedInChat");
                 ItemUtils.edit.put(p.getUniqueId() + ".aftrekkenSpeed", true);
 
             }
             if (menuitem.contains("5")) {
                 p.closeInventory();
-                Main.messagesConfig.sendMessage(p, "typeSpeedInChat");
+                ConfigModule.messagesConfig.sendMessage(p, "typeSpeedInChat");
                 ItemUtils.edit.put(p.getUniqueId() + ".rotateSpeed", true);
             }
             if (menuitem.contains("6")) {
                 p.closeInventory();
-                Main.messagesConfig.sendMessage(p, "typeSpeedInChat");
+                ConfigModule.messagesConfig.sendMessage(p, "typeSpeedInChat");
                 ItemUtils.edit.put(p.getUniqueId() + ".maxSpeedBackwards", true);
             }
         }
         if (e.getView().getTitle().contains("Benzine menu")) {
             e.setCancelled(true);
             p.getInventory().addItem(e.getCurrentItem());
-
         }
         if (e.getView().getTitle().contains("Voucher Redeem Menu")) {
             e.setCancelled(true);
             if (e.getCurrentItem().getItemMeta().getDisplayName().contains("Ja")) {
-                p.sendMessage(Main.messagesConfig.getMessage(TextUtils.colorize("voucherRedeem")));
-                String ken = NBTUtils.getString(p.getInventory().getItemInMainHand(), "mtvehicles.damage");
-                Vehicle.getByDamage(Integer.parseInt(ken), p);
+                String carUuid = NBTUtils.getString(p.getInventory().getItemInMainHand(), "mtvehicles.item");
+                if (Vehicle.getByDamage(p, carUuid) == null){
+                    p.sendMessage(ConfigModule.messagesConfig.getMessage("giveCarNotFound"));
+                    p.closeInventory();
+                    return;
+                }
+                p.sendMessage(ConfigModule.messagesConfig.getMessage(TextUtils.colorize("voucherRedeem")));
                 p.getInventory().getItemInMainHand().setAmount(p.getInventory().getItemInMainHand().getAmount() - 1);
+                p.getInventory().addItem(Vehicle.getByDamage(p, carUuid));
                 p.closeInventory();
             }
             if (e.getCurrentItem().getItemMeta().getDisplayName().contains("Nee")) {

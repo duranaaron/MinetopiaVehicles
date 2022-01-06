@@ -3,6 +3,7 @@ package nl.mtvehicles.core.events;
 import nl.mtvehicles.core.infrastructure.helpers.TextUtils;
 import nl.mtvehicles.core.infrastructure.models.Vehicle;
 import nl.mtvehicles.core.Main;
+import nl.mtvehicles.core.infrastructure.modules.ConfigModule;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -32,15 +33,19 @@ public class VehicleClickEvent implements Listener {
             return;
         }
 
+        if (a.getCustomName().startsWith("VEHICLE")) {
+            e.setCancelled(true);
+            return;
+        }
+
         e.setCancelled(true);
 
         if (lastUsage.containsKey(p.getName())) {
-
-            lastUsed = lastUsage.get(p.getName());
+            lastUsed = ((Long) lastUsage.get(p.getName())).longValue();
         }
 
         if (System.currentTimeMillis() - lastUsed >= 500) {
-            lastUsage.put(p.getName(), System.currentTimeMillis());
+            lastUsage.put(p.getName(), Long.valueOf(System.currentTimeMillis()));
         } else {
             return;
         }
@@ -59,13 +64,13 @@ public class VehicleClickEvent implements Listener {
             if (vehicle == null) {
                 return;
             }
-            if (Main.vehicleDataConfig.getConfig().getBoolean("vehicle."+license+".isOpen") || vehicle.getOwner().equals(p.getUniqueId().toString()) || vehicle.canSit(p) || p.hasPermission("mtvehicles.ride")) {
+            if (ConfigModule.vehicleDataConfig.getConfig().getBoolean("vehicle."+license+".isOpen") || vehicle.getOwner().equals(p.getUniqueId().toString()) || vehicle.canSit(p) || p.hasPermission("mtvehicles.ride")) {
                 if (a.isEmpty()) {
-                    a.setPassenger(p);
-                    p.sendMessage(TextUtils.colorize(Main.messagesConfig.getMessage("vehicleEnterMember").replace("%p%", Bukkit.getOfflinePlayer(UUID.fromString(Vehicle.getByPlate(license).getOwner())).getName())));
+                    a.addPassenger(p);
+                    p.sendMessage(TextUtils.colorize(ConfigModule.messagesConfig.getMessage("vehicleEnterMember").replace("%p%", Bukkit.getOfflinePlayer(UUID.fromString(Vehicle.getByPlate(license).getOwner())).getName())));
                 }
             } else {
-                p.sendMessage(TextUtils.colorize(Main.messagesConfig.getMessage("vehicleNoRiderEnter").replace("%p%", Bukkit.getOfflinePlayer(UUID.fromString(Vehicle.getByPlate(license).getOwner())).getName())));
+                p.sendMessage(TextUtils.colorize(ConfigModule.messagesConfig.getMessage("vehicleNoRiderEnter").replace("%p%", Bukkit.getOfflinePlayer(UUID.fromString(Vehicle.getByPlate(license).getOwner())).getName())));
             }
             return;
         }

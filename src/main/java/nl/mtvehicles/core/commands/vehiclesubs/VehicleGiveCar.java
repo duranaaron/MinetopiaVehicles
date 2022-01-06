@@ -1,12 +1,15 @@
 package nl.mtvehicles.core.commands.vehiclesubs;
 
+import nl.mtvehicles.core.infrastructure.helpers.TextUtils;
 import nl.mtvehicles.core.infrastructure.models.MTVehicleSubCommand;
 import nl.mtvehicles.core.infrastructure.models.Vehicle;
 import nl.mtvehicles.core.Main;
+import nl.mtvehicles.core.infrastructure.modules.ConfigModule;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class VehicleGiveCar extends MTVehicleSubCommand {
     public VehicleGiveCar() {
@@ -18,25 +21,27 @@ public class VehicleGiveCar extends MTVehicleSubCommand {
         if (!checkPermission("mtvehicles.givecar")) return true;
 
         if (args.length != 3) {
-            sendMessage(Main.messagesConfig.getMessage("useGiveCar"));
+            sendMessage(ConfigModule.messagesConfig.getMessage("useGiveCar"));
             return true;
         }
 
-        try {
-            Integer.parseInt(args[1]);
-        } catch (Throwable e) {
-            sendMessage(Main.messagesConfig.getMessage("useGiveCar"));
-            return false;
-        }
+        Player of = Bukkit.getPlayer(args[1]);
 
-        Player of = Bukkit.getPlayer(args[2]);
+        String carUuid = args[2];
 
         if (of == null || !of.hasPlayedBefore()) {
-            sendMessage(Main.messagesConfig.getMessage("playerNotFound"));
+            sendMessage(ConfigModule.messagesConfig.getMessage("playerNotFound"));
             return true;
         }
 
-        Vehicle.getByDamage(Integer.parseInt(args[1]), of);
+        ItemStack car = Vehicle.getByDamage(of, carUuid);
+
+        if (car == null){
+            sender.sendMessage(ConfigModule.messagesConfig.getMessage("giveCarNotFound"));
+            return true;
+        }
+        of.getInventory().addItem(car);
+        sender.sendMessage(ConfigModule.messagesConfig.getMessage("giveCarSucces").replace("%p%", of.getName()));
 
         return true;
     }

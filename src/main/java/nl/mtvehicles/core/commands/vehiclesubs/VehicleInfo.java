@@ -6,6 +6,7 @@ import nl.mtvehicles.core.infrastructure.models.ConfigUtils;
 import nl.mtvehicles.core.infrastructure.models.MTVehicleSubCommand;
 import nl.mtvehicles.core.infrastructure.models.Vehicle;
 import nl.mtvehicles.core.Main;
+import nl.mtvehicles.core.infrastructure.modules.ConfigModule;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -13,6 +14,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -28,29 +31,34 @@ public class VehicleInfo extends MTVehicleSubCommand {
         ItemStack item = p.getInventory().getItemInMainHand();
 
         if (!item.hasItemMeta() || !(NBTUtils.contains(item, "mtvehicles.kenteken"))) {
-            sendMessage(TextUtils.colorize(Main.messagesConfig.getMessage("noVehicleInHand")));
+            sendMessage(TextUtils.colorize(ConfigModule.messagesConfig.getMessage("noVehicleInHand")));
             return true;
         }
 
-        Main.configList.forEach(ConfigUtils::reload);
+        ConfigModule.configList.forEach(ConfigUtils::reload);
 
         String ken = NBTUtils.getString(item, "mtvehicles.kenteken");
         Vehicle vehicle = Vehicle.getByPlate(ken);
 
         if (vehicle == null) return true;
 
+        NumberFormat formatter = new DecimalFormat("#0.000");
+        sendMessage(ConfigModule.messagesConfig.getMessage("vehicleInfoInformation"));
+        sendMessage(ConfigModule.messagesConfig.getMessage("vehicleInfoType") + vehicle.getVehicleType());
+        sendMessage(ConfigModule.messagesConfig.getMessage("vehicleInfoName") + vehicle.getName());
+        sendMessage(ConfigModule.messagesConfig.getMessage("vehicleInfoLicense") + ken);
         if (p.hasPermission("mtvehicles.admin")) {
-            sendMessage("&6ID: &c" + p.getItemInHand().getDurability());
+            sendMessage(ConfigModule.messagesConfig.getMessage("vehicleInfoUUID") + Vehicle.getCarUuid(ken));
         }
-
-        sendMessage("&6Kenteken: &c" + ken);
-        sendMessage("&6Owner: &c" + vehicle.getOwnerName());
+        sendMessage(ConfigModule.messagesConfig.getMessage("vehicleInfoSpeed") + formatter.format(vehicle.getMaxSpeed()*20).toString().replace(",", ".") + " blocks/sec");
+        sendMessage(ConfigModule.messagesConfig.getMessage("vehicleInfoAcceleration") + formatter.format(vehicle.getAccelerationSpeed()/0.2*100).toString().replace(",", ".") + " blocks/sec^2");
+        sendMessage(ConfigModule.messagesConfig.getMessage("vehicleInfoOwner") + vehicle.getOwnerName());
 
         if (vehicle.getRiders().size() == 0) {
-            sendMessage("&6Riders: &cGeen");
+            sendMessage(ConfigModule.messagesConfig.getMessage("vehicleInfoRiders"));
         } else {
             sendMessage(String.format(
-                    "&6Riders (%s): &c%s",
+                    ConfigModule.messagesConfig.getMessage("vehicleInfoRiders2"),
                     vehicle.getRiders().size(),
                     vehicle.getRiders().stream()
                             .map(UUID::fromString)
@@ -61,10 +69,10 @@ public class VehicleInfo extends MTVehicleSubCommand {
         }
 
         if (vehicle.getMembers().size() == 0) {
-            sendMessage("&6Members: &cGeen");
+            sendMessage(ConfigModule.messagesConfig.getMessage("vehicleInfoMembers"));
         } else {
             sendMessage(String.format(
-                    "&6Members (%s): &c%s",
+                    ConfigModule.messagesConfig.getMessage("vehicleInfoMembers2"),
                     vehicle.getMembers().size(),
                     vehicle.getMembers().stream()
                             .map(UUID::fromString)

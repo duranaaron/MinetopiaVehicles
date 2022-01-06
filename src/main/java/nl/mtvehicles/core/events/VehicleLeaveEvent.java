@@ -1,9 +1,13 @@
 package nl.mtvehicles.core.events;
 
+import nl.mtvehicles.core.Main;
 import nl.mtvehicles.core.infrastructure.helpers.BossBarUtils;
+import nl.mtvehicles.core.infrastructure.helpers.TextUtils;
 import nl.mtvehicles.core.infrastructure.helpers.VehicleData;
 import nl.mtvehicles.core.infrastructure.models.Vehicle;
+import nl.mtvehicles.core.infrastructure.modules.ConfigModule;
 import org.bukkit.Material;
+import org.bukkit.boss.BarColor;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -43,7 +47,13 @@ public class VehicleLeaveEvent implements Listener {
                     VehicleData.autostand.get("MTVEHICLES_SEAT" + i + "_" + ken).remove();
                 }
             }
-            VehicleData.type.clear();
+            VehicleData.type.remove(ken+"b");
+
+            if (ConfigModule.defaultConfig.getConfig().getBoolean("benzine") && ConfigModule.vehicleDataConfig.getConfig().getBoolean("vehicle." + ken + ".benzineEnabled")) {
+                Double fuel = VehicleData.fuel.get(ken);
+                ConfigModule.vehicleDataConfig.getConfig().set(String.format("vehicle.%s.benzine", ken), fuel);
+                ConfigModule.vehicleDataConfig.save();
+            }
         }
     }
 }
